@@ -18,8 +18,8 @@ module.exports = {
       .setTitle('Fila de músicas do servidor')
       .setColor('#f8f8f8')
       .setFooter(
-        `Requisitado por ${interaction.username}`,
-        interaction.displayAvatarURL()
+        `Requisitado por ${interaction.user.username}`,
+        interaction.user.displayAvatarURL()
       )
       .setTimestamp();
 
