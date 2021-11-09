@@ -6,7 +6,8 @@ module.exports = client =>
       {
         host: 'lava.link',
         password: 'anything as a password',
-        port: 80
+        port: 80,
+        retryAmount: 90
       }
     ],
     autoPlay: true,
