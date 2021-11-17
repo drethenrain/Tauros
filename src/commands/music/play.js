@@ -19,7 +19,7 @@ module.exports = {
       });
 
     const search = args.join(' ');
-    if (!search) return message.reply('digite o nome da musica');
+    if (!search) return message.reply('digite o nome da música');
 
     let res;
 

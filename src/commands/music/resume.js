@@ -26,6 +26,6 @@ module.exports = {
       });
 
     player.pause(false);
-    message.reply({ content: 'Música resumida!' });
+    message.reply({ content: 'Música pausada retomada' });
   }
 };

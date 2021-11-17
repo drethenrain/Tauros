@@ -4,7 +4,7 @@ module.exports = {
     description: 'Tocar música',
     options: [
       {
-        name: 'musica',
+        name: 'música',
         type: 'STRING',
         description: 'Nome da música para ser tocada',
         required: true
@@ -27,7 +27,7 @@ module.exports = {
           'Você precisa estar no mesmo canal de voz que eu para utilizar este comando!'
       });
 
-    const search = interaction.options.getString('musica');
+    const search = interaction.options.getString('música');
 
     let res;
 

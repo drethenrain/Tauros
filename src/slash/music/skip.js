@@ -1,7 +1,7 @@
 module.exports = {
   config: {
     name: 'skip',
-    description: 'Pular a musica que está tocando'
+    description: 'Pular a música que está tocando'
   },
   run: async (client, interaction) => {
     const player = client.manager.get(interaction.guild.id);

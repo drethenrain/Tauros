@@ -1,7 +1,7 @@
 module.exports = {
   config: {
     name: 'resume',
-    description: 'Resumir a musica pausada'
+    description: 'Retomar a música pausada'
   },
   run: async (client, interaction) => {
     const player = client.manager.get(interaction.guild.id);
@@ -26,6 +26,6 @@ module.exports = {
       });
 
     player.pause(false);
-    interaction.reply({ content: 'Música resumida!' });
+    interaction.reply({ content: 'Música pausada retomada' });
   }
 };
