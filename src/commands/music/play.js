@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 module.exports = {
   config: {
     name: 'play',
@@ -21,18 +22,38 @@ module.exports = {
     const search = args.join(' ');
     if (!search) return message.reply('digite o nome da música');
 
+    const player = client.manager.create({
+      guild: message.guild.id,
+      voiceChannel: message.member.voice.channel.id,
+      textChannel: message.channel.id
+    });
+
+    if (player.state !== 'CONNECTED') player.connect();
+
     let res;
 
     try {
       res = await client.manager.search(search, message.member.user);
 
-      if (res.loadType === 'LOAD_FAILED') throw res.exception;
-      else if (res.loadType === 'PLAYLIST_LOADED')
-        // eslint-disable-next-line no-throw-literal
-        throw { message: 'Playlists não são suportadas neste comando.' };
+      // eslint-disable-next-line default-case
+      switch (res.loadType) {
+        case 'LOAD_FAILED':
+          if (!player.queue.current) player.destroy();
+          throw res.exception;
+        case 'PLAYLIST_LOADED':
+          player.queue.add(res.tracks);
+
+          if (
+            !player.playing &&
+            !player.paused &&
+            player.queue.totalSize === res.tracks.length
+          )
+            player.play();
+          break;
+      }
     } catch (err) {
       return message.reply({
-        content: `Aconteceu um erro ao tentar buscar a música: ${err.message}`
+        content: `Aconteceu um erro ao tentar buscar a música: **${err.message}**`
       });
     }
 
@@ -41,15 +62,7 @@ module.exports = {
         content: 'Música não encontrada!'
       });
 
-    const player = client.manager.create({
-      guild: message.guild.id,
-      voiceChannel: message.member.voice.channel.id,
-      textChannel: message.channel.id
-    });
-
-    if (player.state !== 'CONNECTED') player.connect();
     player.queue.add(res.tracks[0]);
-
     if (!player.playing && !player.paused) player.play();
 
     return message.reply({
