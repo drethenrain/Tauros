@@ -20,12 +20,16 @@ module.exports = {
       });
 
     const search = args.join(' ');
-    if (!search) return message.reply('digite o nome da música');
+    if (!search)
+      return message.reply(
+        'Tente novamente com o nome/link da música ou o link de uma playlist'
+      );
 
     const player = client.manager.create({
       guild: message.guild.id,
       voiceChannel: message.member.voice.channel.id,
-      textChannel: message.channel.id
+      textChannel: message.channel.id,
+      selfDeafen: true
     });
 
     if (player.state !== 'CONNECTED') player.connect();
@@ -34,21 +38,33 @@ module.exports = {
 
     try {
       res = await client.manager.search(search, message.member.user);
-
+      if (res.loadType === 'LOAD_FAILED') {
+        if (!player.queue.current) player.destroy();
+        throw res.exception;
+      }
       // eslint-disable-next-line default-case
       switch (res.loadType) {
-        case 'LOAD_FAILED':
-          if (!player.queue.current) player.destroy();
-          throw res.exception;
+        case 'NO_MATCHES':
+          message.reply('Música não encontrada!');
+          break;
+        case 'SEARCH_RESULT':
+          player.queue.add(res.tracks[0]);
+          message.reply(`\`${res.tracks[0].title}\` adicionada à fila.`);
+
+          if (!player.playing) player.play();
+
+          break;
+        case 'TRACK_LOADED':
+          break;
+
         case 'PLAYLIST_LOADED':
           player.queue.add(res.tracks);
+          message.reply(
+            `Adicionei \`${res.tracks.length}\` músicas da playlist`
+          );
 
-          if (
-            !player.playing &&
-            !player.paused &&
-            player.queue.totalSize === res.tracks.length
-          )
-            player.play();
+          if (!player.playing) player.play();
+
           break;
       }
     } catch (err) {
@@ -56,17 +72,5 @@ module.exports = {
         content: `Aconteceu um erro ao tentar buscar a música: **${err.message}**`
       });
     }
-
-    if (!res?.tracks?.[0])
-      return message.reply({
-        content: 'Música não encontrada!'
-      });
-
-    player.queue.add(res.tracks[0]);
-    if (!player.playing && !player.paused) player.play();
-
-    return message.reply({
-      content: `\`${res.tracks[0].title}\` adicionada à fila.`
-    });
   }
 };
