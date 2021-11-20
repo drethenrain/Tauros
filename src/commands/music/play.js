@@ -37,7 +37,7 @@ module.exports = {
     let res;
 
     try {
-      res = await client.manager.search(search, message.member.user);
+      res = await player.search(search, message.member.user);
       if (res.loadType === 'LOAD_FAILED') {
         if (!player.queue.current) player.destroy();
         throw res.exception;
@@ -47,14 +47,12 @@ module.exports = {
         case 'NO_MATCHES':
           message.reply('Música não encontrada!');
           break;
-        case 'SEARCH_RESULT':
+
+        case 'TRACK_LOADED':
           player.queue.add(res.tracks[0]);
           message.reply(`\`${res.tracks[0].title}\` adicionada à fila.`);
 
           if (!player.playing) player.play();
-
-          break;
-        case 'TRACK_LOADED':
           break;
 
         case 'PLAYLIST_LOADED':
@@ -65,6 +63,12 @@ module.exports = {
 
           if (!player.playing) player.play();
 
+          break;
+        case 'SEARCH_RESULT':
+          player.queue.add(res.tracks[0]);
+          message.reply(`\`${res.tracks[0].title}\` adicionada à fila.`);
+
+          if (!player.playing) player.play();
           break;
       }
     } catch (err) {
