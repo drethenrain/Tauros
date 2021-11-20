@@ -2,14 +2,7 @@ const { Manager } = require('erela.js');
 
 module.exports = client =>
   new Manager({
-    nodes: [
-      {
-        host: 'lava.link',
-        password: 'anything as a password',
-        port: 80,
-        retryAmount: 90
-      }
-    ],
+    nodes: client.config.nodes,
     autoPlay: true,
     send: (id, payload) => {
       const guild = client.guilds.cache.get(id);
