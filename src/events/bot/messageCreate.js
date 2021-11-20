@@ -4,20 +4,12 @@ module.exports = async (client, message) => {
   if (message.author.bot || message.channel.type === 'dm') return;
 
   const guild = await Guild.findOne({ _id: message.guild.id });
-  let prefix = process.env.PREFIX;
-
-  if (!guild) {
-    return new Guild({
-      _id: message.guild.id
-    }).save();
-  }
-
-  if (guild.prefix) {
-    prefix = guild.prefix;
-  }
-
+  const prefix = guild.prefix || process.env.PREFIX;
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
+
+  if (message.content === `<@!${client.user.id}>`)
+    message.reply(`O meu prefixo aqui é \`${prefix}\``);
 
   if (!message.content.startsWith(prefix)) return;
 

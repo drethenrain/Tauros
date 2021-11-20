@@ -5,10 +5,6 @@ const schema = new Schema(
     _id: {
       type: String,
       required: true
-    },
-    username: {
-      type: String,
-      required: true
     }
   },
   {
