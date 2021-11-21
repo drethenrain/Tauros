@@ -732,6 +732,13 @@ enquirer@^2.3.5:
   dependencies:
     ansi-colors "^4.1.1"
 
+erela.js-filters@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/erela.js-filters/-/erela.js-filters-1.2.6.tgz#1188d913a5db71589cfbb04d605dc07c3835cb0c"
+  integrity sha512-nslkY2bxxRZHzE6Xsqq9qtHnpmFXf4DEr+gFLDexoJPEKtrecR38VkA8KgIq/6BwV8wxGU1Lq0l29oNn+V47hA==
+  dependencies:
+    erela.js "^2.3.3"
+
 erela.js@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/erela.js/-/erela.js-2.3.3.tgz#22b43e29315c2fcdc8e070beda93eb3f34405c16"

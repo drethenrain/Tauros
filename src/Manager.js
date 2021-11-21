@@ -1,9 +1,11 @@
 const { Manager } = require('erela.js');
+const Filters = require('erela.js-filters');
 
 module.exports = client =>
   new Manager({
     nodes: client.config.nodes,
     autoPlay: true,
+    plugins: [new Filters()],
     send: (id, payload) => {
       const guild = client.guilds.cache.get(id);
       if (guild) guild.shard.send(payload);
