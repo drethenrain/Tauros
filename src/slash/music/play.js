@@ -37,39 +37,37 @@ module.exports = {
       selfDeafen: true
     });
 
-    if (player.state !== 'CONNECTED') player.connect();
-
-    let res;
-
     try {
-      res = await client.manager.search(search, interaction.member.user);
-      if (res.loadType === 'LOAD_FAILED') {
+      if (player.state !== 'CONNECTED') player.connect();
+
+      const { loadType, tracks, exception } = await player.search(
+        search,
+        interaction.member.user
+      );
+
+      if (loadType === 'LOAD_FAILED') {
         if (!player.queue.current) player.destroy();
-        throw res.exception;
+        interaction.reply(
+          `Aconteceu um erro ao tentar tocar a musica: ${exception?.message}`
+        );
+      } else if (loadType === 'NO_MATCHES') {
+        interaction.reply('Música não encontrada!');
       }
-      // eslint-disable-next-line default-case
-      switch (res.loadType) {
-        case 'NO_MATCHES':
-          interaction.reply('Música não encontrada!');
-          break;
-        case 'SEARCH_RESULT':
-          player.queue.add(res.tracks[0]);
-          interaction.reply(`\`${res.tracks[0].title}\` adicionada à fila.`);
 
-          if (!player.playing) player.play();
-
-          break;
-        case 'TRACK_LOADED':
-          break;
-
+      switch (loadType) {
         case 'PLAYLIST_LOADED':
-          player.queue.add(res.tracks);
-          interaction.reply(
-            `Adicionei \`${res.tracks.length}\` músicas da playlist`
-          );
-
+          player.queue.add(tracks);
           if (!player.playing) player.play();
 
+          interaction.reply(
+            `Adicionei \`${tracks.length}\` músicas da playlist`
+          );
+          break;
+        default:
+          player.queue.add(tracks[0]);
+          if (!player.playing) player.play();
+
+          interaction.reply(`\`${tracks[0].title}\` adicionada à fila.`);
           break;
       }
     } catch (err) {

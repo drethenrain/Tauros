@@ -1,11 +1,21 @@
 const { Manager } = require('erela.js');
 const Filters = require('erela.js-filters');
+const { default: Spotify } = require('better-erela.js-spotify');
+const Deezer = require('erela.js-deezer');
 
 module.exports = client =>
   new Manager({
     nodes: client.config.nodes,
     autoPlay: true,
-    plugins: [new Filters()],
+    plugins: [
+      new Filters(),
+      new Spotify({
+        clientId: process.env.SPOTIFY_ID,
+        clientSecret: process.env.SPOTIFY_SECRET,
+        strategy: 'API'
+      }),
+      new Deezer()
+    ],
     send: (id, payload) => {
       const guild = client.guilds.cache.get(id);
       if (guild) guild.shard.send(payload);
