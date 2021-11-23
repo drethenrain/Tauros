@@ -1,12 +1,15 @@
 module.exports = async (client, interaction) => {
-  if (!interaction.isCommand()) return;
-  if (!interaction.guild) return;
+  try {
+    if (!interaction.isCommand()) return;
+    if (!interaction.guild) return;
 
-  const cmd = interaction.commandName;
+    const cmd = interaction.commandName;
 
-  const command = client.slash.get(cmd.toLowerCase());
+    const command = client.slash.get(cmd.toLowerCase());
 
-  if (command) {
-    command.run(client, interaction);
-  }
+    if (command) {
+      command.run(client, interaction);
+    }
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
 };

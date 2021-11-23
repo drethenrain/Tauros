@@ -1,7 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const axios = require('axios').default;
-
-const { capitalize, normalize } = require('../../utils');
+const Weather = require('../../apis/Weather');
 
 module.exports = {
   config: {
@@ -17,45 +15,32 @@ module.exports = {
     ]
   },
   run: async (client, interaction) => {
-    // try {
-    //   const city = interaction.options.getString('cidade');
+    const city = interaction.options.getString('cidade');
+    Weather.getData(city)
+      .then(res =>
+        interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setColor('#f8f8f8')
+              .setThumbnail(res.iconURL)
+              .setTitle(`Tempo em ${res.city}`)
+              .addField('Clima', res.description)
+              .addField('Temperatura', `${res.temperature}°c`)
+              .addField('Sensação', `${res.feelsLike}°c`)
+              .addField('Humidade', `${res.humidity}%`)
+              .addField(
+                'Coordenadas',
+                `Latitude: \`${res.coord.lat}\`\nLongitude: \`${res.coord.lon}\``
+              )
 
-    //   const request = await axios.get(
-    //     `https://api.openweathermap.org/data/2.5/weather?
-    //     `,
-    //     {
-    //       params: {
-    //         q: normalize(city),
-    //         lang: 'pt_br',
-    //         units: 'metric',
-    //         appid: process.env.WEATHER_ID
-    //       }
-    //     }
-    //   );
-
-    //   const embed = new MessageEmbed()
-    //     .setColor('#f8f8f8')
-    //     .setThumbnail(
-    //       `https://openweathermap.org/img/wn/${request.data.weather[0].icon}@${
-    //         '4x' || '2x'
-    //       }.png`
-    //     )
-    //     .setTitle(`Tempo em ${request.data.name}`)
-    //     .addField('Clima', capitalize(request.data.weather[0].description))
-    //     .addField('Temperatura', `${request.data.main.temp}°c`)
-    //     .addField('Sensação', `${request.data.main.feels_like}°c`)
-    //     .addField('Humidade', `${request.data.main.humidity}%`)
-    //     .setFooter(
-    //       `Requisitado por ${interaction.user.username}`,
-    //       interaction.user.displayAvatarURL()
-    //     )
-    //     .setTimestamp();
-
-    //   interaction.reply({ embeds: [embed] });
-    // } catch (error) {
-    //   interaction.reply('Essa cidade não existe');
-    // }
-
-    interaction.reply('Comando desativado por enquanto :+1:');
+              .setFooter(
+                `Requisitado por ${interaction.user.username}`,
+                interaction.user.displayAvatarURL()
+              )
+              .setTimestamp()
+          ]
+        })
+      )
+      .catch(e => interaction.reply('Essa cidade não existe'));
   }
 };
