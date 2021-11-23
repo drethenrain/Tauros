@@ -14,16 +14,48 @@ module.exports = {
 
     try {
       // eslint-disable-next-line no-eval
-      let evaled = await eval(code);
+      let evaled = eval(code);
+      evaled = clean(evaled);
 
-      if (typeof evaled !== 'string')
-        evaled = require('util').inspect(evaled, {
-          depth: 0
+      if (evaled.length < 2000) {
+        message.reply(
+          `🎈 Tipo: ${getType(
+            evaled
+          )}\n📥 Resultado: \n \`\`\`js\n${evaled}\`\`\``
+        );
+      } else {
+        message.reply({
+          content: `🎈 Tipo: ${getType(evaled)}\n📥 Resultado:`,
+          files: [
+            {
+              name: 'eval.js',
+              attachment: Buffer.from(evaled)
+            }
+          ]
         });
-
-      message.reply(` 📥 Resultado: \n \`\`\`js\n${evaled}\`\`\``);
+      }
     } catch (err) {
-      message.reply(` 📤 Erro: \n \`\`\`js\n${err}\`\`\``);
+      message.reply(`📤 Erro: \n \`\`\`js\n${err}\`\`\``);
     }
   }
+};
+
+const clean = text => {
+  if (typeof text !== 'string')
+    text = require('util').inspect(text, {
+      depth: 0
+    });
+
+  text = text
+    .replace(/`/g, `\`${String.fromCharCode(8203)}`)
+    .replace(/@/g, `@${String.fromCharCode(8203)}`)
+    .replace(process.env.TOKEN, '😃');
+
+  return text;
+};
+
+const getType = text => {
+  if (text === null) return 'null';
+
+  return text?.constructor?.name ?? typeof text;
 };

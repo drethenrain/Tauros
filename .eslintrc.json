@@ -26,6 +26,8 @@
     "class-methods-use-this": "off",
     "import/no-dynamic-require": "off",
     "no-return-assign": "off",
-    "no-bitwise": "off"
+    "no-bitwise": "off",
+    "no-use-before-define": "off",
+    "no-param-reassign": "off"
   }
 }
