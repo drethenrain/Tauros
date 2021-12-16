@@ -15,18 +15,17 @@ module.exports = {
     ]
   },
   run: async (client, interaction) => {
-    const city = interaction.options.getString('cidade');
-    Weather.getData(city)
+    Weather.getData(interaction.options.getString('cidade'))
       .then(res =>
         interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor('#f8f8f8')
               .setThumbnail(res.iconURL)
-              .setTitle(`Tempo em ${res.city}`)
+              .setTitle(`Tempo em ${res.city}, ${res.countryCode}`)
               .addField('Clima', res.description)
               .addField('Temperatura', `${res.temperature}°c`)
-              .addField('Sensação', `${res.feelsLike}°c`)
+              .addField('Sensação Térmica', `${res.feelsLike}°c`)
               .addField('Humidade', `${res.humidity}%`)
               .addField(
                 'Coordenadas',

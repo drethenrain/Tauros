@@ -18,14 +18,10 @@ module.exports = {
       evaled = clean(evaled);
 
       if (evaled.length < 2000) {
-        message.reply(
-          `🎈 Tipo: ${getType(
-            evaled
-          )}\n📥 Resultado: \n \`\`\`js\n${evaled}\`\`\``
-        );
+        message.reply(`📥 Resultado: \n \`\`\`js\n${evaled}\`\`\``);
       } else {
         message.reply({
-          content: `🎈 Tipo: ${getType(evaled)}\n📥 Resultado:`,
+          content: '📥 Resultado:',
           files: [
             {
               name: 'eval.js',
@@ -52,10 +48,4 @@ const clean = text => {
     .replace(process.env.TOKEN, '😃');
 
   return text;
-};
-
-const getType = text => {
-  if (text === null) return 'null';
-
-  return text?.constructor?.name ?? typeof text;
 };

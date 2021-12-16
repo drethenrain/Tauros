@@ -28,8 +28,8 @@ module.exports = {
           .setTitle('Tocando Agora')
           .setThumbnail(player.queue.current.displayThumbnail('maxresdefault'))
           .setColor('#ffffff')
-          .addField('Título:', `\`${player.queue.current.title}\``)
-          .addField('Autor:', player.queue.current.author)
+          .addField('Título:', `\`${player.queue.current.title}\``, true)
+          .addField('Autor:', player.queue.current.author, true)
           .addField('Requisitado por:', `${player.queue.current.requester}`)
       ]
     });
